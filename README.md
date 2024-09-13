@@ -1,5 +1,16 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## TODO
+
+Setup Docker for local postgresql db
+Setup Drizzle
+Setup React Query
+Setup Playwright
+Setup Shadcn
+Setup ZOA
+Setup React Email
+Setup nuqs???
+
 ## Getting Started
 
 First, run the development server:
