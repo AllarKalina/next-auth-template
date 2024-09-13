@@ -2,13 +2,20 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## TODO
 
-Setup Docker for local postgresql db
+Setup Docker for local postgresql db - DONE
+
 Setup Drizzle
+
 Setup React Query
+
 Setup Playwright
+
 Setup Shadcn
+
 Setup ZOA
+
 Setup React Email
+
 Setup nuqs???
 
 ## Getting Started
