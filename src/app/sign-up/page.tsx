@@ -1,4 +1,5 @@
 import SignUpForm from "@/components/forms/SignUpForm";
+import LanguageSelector from "@/components/LanguageSelector";
 import {
   Card,
   CardContent,
@@ -14,12 +15,13 @@ export default function SignUpPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-center text-3xl font-bold">
-            Create an Account
-          </CardTitle>
-          <CardDescription className="text-center">
-            Sign up to get started
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-3xl font-bold">
+              Create an account
+            </CardTitle>
+            <LanguageSelector />
+          </div>
+          <CardDescription>Sign up to get started</CardDescription>
         </CardHeader>
         <CardContent>
           <SignUpForm />
@@ -27,7 +29,7 @@ export default function SignUpPage() {
         <CardFooter>
           <div className="mt-4 text-center text-sm text-gray-500">
             Already have an account?{" "}
-            <Link href="#" className="text-blue-600 hover:underline">
+            <Link href="/sign-in" className="text-blue-600 hover:underline">
               Sign in
             </Link>
           </div>

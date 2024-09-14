@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { type z } from "zod";
 import {
   Form,
   FormControl,
@@ -14,34 +14,45 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
-
-const formSchema = z.object({
-  name: z.string().min(2).max(100),
-  email: z.string().email(),
-  password: z
-    .string()
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-    .regex(/\d/, "Password must contain at least one digit")
-    .min(8, "Password must be at least 8 characters"),
-});
+import { CheckIcon, EyeIcon, EyeOffIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { signUpSchema } from "@/lib/formSchemas";
+import { useServerAction } from "zsa-react";
+import { signUp } from "@/actions/auth.actions";
+import { AuthError } from "@/actions/types";
+import { useRouter } from "next/navigation";
 
 export default function SignUpForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const { execute, isPending } = useServerAction(signUp);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       name: "",
+      email: "",
+      password: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof signUpSchema>) {
+    const [data, error] = await execute(values);
+
+    if (error) {
+      if (error.data === AuthError.EMAIL_USED) {
+        form.setError("email", {
+          type: "custom",
+          message: "Email already exists",
+        });
+      }
+    } else if (data) {
+      router.push(`/check-email?code=${data.code}`);
+    }
   }
+
+  const watchPassword = form.watch("password");
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -104,91 +115,70 @@ export default function SignUpForm() {
                 </div>
               </FormControl>
               <FormMessage />
+              <div className="grid sm:grid-cols-2">
+                <div className="mt-2 flex items-center gap-1">
+                  {watchPassword?.match(/[A-Z]/) && (
+                    <CheckIcon size={16} className="text-emerald-600" />
+                  )}
+                  <p
+                    className={cn(
+                      "text-sm text-slate-500",
+                      watchPassword?.match(/[A-Z]/) &&
+                        "font-medium text-slate-900",
+                    )}
+                  >
+                    One upper-case letter
+                  </p>
+                </div>
+                <div className="mt-2 flex items-center gap-1">
+                  {watchPassword?.match(/[a-z]/) && (
+                    <CheckIcon size={16} className="text-emerald-600" />
+                  )}
+                  <p
+                    className={cn(
+                      "text-sm text-slate-500",
+                      watchPassword?.match(/[a-z]/) &&
+                        "font-medium text-slate-900",
+                    )}
+                  >
+                    One lower-case letter
+                  </p>
+                </div>
+                <div className="mt-2 flex items-center gap-1">
+                  {watchPassword?.match(/\d/) && (
+                    <CheckIcon size={16} className="text-emerald-600" />
+                  )}
+                  <p
+                    className={cn(
+                      "text-sm text-slate-500",
+                      watchPassword?.match(/\d/) &&
+                        "font-medium text-slate-900",
+                    )}
+                  >
+                    One digit
+                  </p>
+                </div>
+                <div className="mt-2 flex items-center gap-1">
+                  {watchPassword.length >= 8 && (
+                    <CheckIcon size={16} className="text-emerald-600" />
+                  )}
+                  <p
+                    className={cn(
+                      "text-sm text-slate-500",
+                      watchPassword.length >= 8 && "font-medium text-slate-900",
+                    )}
+                  >
+                    8 characters or more
+                  </p>
+                </div>
+              </div>
             </FormItem>
           )}
         />
-        <Button className="!mt-12 w-full" type="submit">
+        <Button className="!mt-6 w-full" type="submit">
           Sign Up
         </Button>
       </form>
     </Form>
   );
-}
-
-{
-  /* <form>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input id="name" placeholder="John Doe" required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="name@example.com"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Create a password"
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-2 top-1/2 -translate-y-1/2"
-                    onClick={togglePasswordVisibility}
-                  >
-                    {showPassword ? (
-                      <EyeOffIcon className="h-4 w-4" aria-hidden="true" />
-                    ) : (
-                      <EyeIcon className="h-4 w-4" aria-hidden="true" />
-                    )}
-                    <span className="sr-only">
-                      {showPassword ? "Hide password" : "Show password"}
-                    </span>
-                  </Button>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirm-password">Confirm Password</Label>
-                <div className="relative">
-                  <Input
-                    id="confirm-password"
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm your password"
-                    required
-                    onChange={handleConfirmPassword}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-2 top-1/2 -translate-y-1/2"
-                    onClick={toggleConfirmPasswordVisibility}
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOffIcon className="h-4 w-4" aria-hidden="true" />
-                    ) : (
-                      <EyeIcon className="h-4 w-4" aria-hidden="true" />
-                    )}
-                    <span className="sr-only">
-                      {showConfirmPassword ? "Hide password" : "Show password"}
-                    </span>
-                  </Button>
-                </div>
-                {!passwordMatch && (
-                  <p className="text-sm text-red-500">Passwords do not match</p>
-                )}
-              </div>
-            </div>
-          </form> */
 }
