@@ -88,5 +88,6 @@ export default defineConfig({
     port,
     command: "pnpm dev",
     reuseExistingServer: !process.env.CI,
+    url: baseURL,
   },
 });
