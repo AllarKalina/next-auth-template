@@ -12,11 +12,12 @@ test.describe("Sign up", () => {
     const nameInput = page.getByTestId("name-input");
     const emailInput = page.getByTestId("email-input");
     const passwordInput = page.getByTestId("password-input");
+    const submitButton = page.getByTestId("sign-up-button");
 
     await nameInput.fill("Allar Kalina");
     await emailInput.fill("allarkalina@gmail.com");
     await passwordInput.fill("Tere1234");
-    await passwordInput.press("Enter");
+    await submitButton.click();
 
     const emailConformationPageHeader = page.getByText("Check Your Email");
 
@@ -47,9 +48,6 @@ test.describe("Sign up", () => {
     await nameInput.fill("a");
     await emailInput.fill("a");
     await passwordInput.fill("a");
-
-    const submitButton = page.getByTestId("sign-up-button");
-    await submitButton.click();
 
     const nameError = page.getByText(
       "Name must contain atleast 2 character(s)",
