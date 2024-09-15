@@ -21,11 +21,13 @@ import { useServerAction } from "zsa-react";
 import { signUp } from "@/actions/auth.actions";
 import { AuthError } from "@/actions/types";
 import { useRouter } from "next/navigation";
+import { ButtonLoading } from "../ui/button-loading";
+import Link from "next/link";
 
 export default function SignUpForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const { execute, isPending } = useServerAction(signUp);
+  const { execute, isPending, isSuccess } = useServerAction(signUp);
 
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -43,7 +45,7 @@ export default function SignUpForm() {
       if (error.data === AuthError.EMAIL_USED) {
         form.setError("email", {
           type: "custom",
-          message: "Email already exists",
+          message: "Email already exists.",
         });
       }
     } else if (data) {
@@ -78,7 +80,18 @@ export default function SignUpForm() {
               <FormControl>
                 <Input required placeholder="name@example.com" {...field} />
               </FormControl>
-              <FormMessage />
+              <div className="flex items-center gap-1">
+                <FormMessage />
+                {form.getFieldState("email").error?.message ===
+                  "Email already exists." && (
+                  <Link
+                    href="/sign-in"
+                    className="text-sm text-blue-600 hover:underline"
+                  >
+                    Sign in instead
+                  </Link>
+                )}
+              </div>
             </FormItem>
           )}
         />
@@ -117,55 +130,88 @@ export default function SignUpForm() {
               <FormMessage />
               <div className="grid sm:grid-cols-2">
                 <div className="mt-2 flex items-center gap-1">
-                  {watchPassword?.match(/[A-Z]/) && (
-                    <CheckIcon size={16} className="text-emerald-600" />
+                  {watchPassword?.match(/[A-Z]/) ? (
+                    <div className="rounded-full bg-emerald-50 p-1">
+                      <CheckIcon
+                        size={12}
+                        strokeWidth={3}
+                        className="font-bold text-emerald-600"
+                      />
+                    </div>
+                  ) : (
+                    <div className="mx-2 h-1 w-1 rounded-full bg-slate-300" />
                   )}
                   <p
                     className={cn(
                       "text-sm text-slate-500",
                       watchPassword?.match(/[A-Z]/) &&
-                        "font-medium text-slate-900",
+                        "font-medium text-slate-900 line-through",
                     )}
                   >
                     One upper-case letter
                   </p>
                 </div>
                 <div className="mt-2 flex items-center gap-1">
-                  {watchPassword?.match(/[a-z]/) && (
-                    <CheckIcon size={16} className="text-emerald-600" />
+                  {watchPassword?.match(/[a-z]/) ? (
+                    <div className="rounded-full bg-emerald-50 p-1">
+                      <CheckIcon
+                        size={12}
+                        strokeWidth={3}
+                        className="font-bold text-emerald-600"
+                      />
+                    </div>
+                  ) : (
+                    <div className="mx-2 h-1 w-1 rounded-full bg-slate-300" />
                   )}
                   <p
                     className={cn(
                       "text-sm text-slate-500",
                       watchPassword?.match(/[a-z]/) &&
-                        "font-medium text-slate-900",
+                        "font-medium text-slate-900 line-through",
                     )}
                   >
                     One lower-case letter
                   </p>
                 </div>
                 <div className="mt-2 flex items-center gap-1">
-                  {watchPassword?.match(/\d/) && (
-                    <CheckIcon size={16} className="text-emerald-600" />
+                  {watchPassword?.match(/\d/) ? (
+                    <div className="rounded-full bg-emerald-50 p-1">
+                      <CheckIcon
+                        size={12}
+                        strokeWidth={3}
+                        className="font-bold text-emerald-600"
+                      />
+                    </div>
+                  ) : (
+                    <div className="mx-2 h-1 w-1 rounded-full bg-slate-300" />
                   )}
                   <p
                     className={cn(
                       "text-sm text-slate-500",
                       watchPassword?.match(/\d/) &&
-                        "font-medium text-slate-900",
+                        "font-medium text-slate-900 line-through",
                     )}
                   >
                     One digit
                   </p>
                 </div>
                 <div className="mt-2 flex items-center gap-1">
-                  {watchPassword.length >= 8 && (
-                    <CheckIcon size={16} className="text-emerald-600" />
+                  {watchPassword.length >= 8 ? (
+                    <div className="rounded-full bg-emerald-50 p-1">
+                      <CheckIcon
+                        size={12}
+                        strokeWidth={3}
+                        className="font-bold text-emerald-600"
+                      />
+                    </div>
+                  ) : (
+                    <div className="mx-2 h-1 w-1 rounded-full bg-slate-300" />
                   )}
                   <p
                     className={cn(
                       "text-sm text-slate-500",
-                      watchPassword.length >= 8 && "font-medium text-slate-900",
+                      watchPassword.length >= 8 &&
+                        "font-medium text-slate-900 line-through",
                     )}
                   >
                     8 characters or more
@@ -175,9 +221,13 @@ export default function SignUpForm() {
             </FormItem>
           )}
         />
-        <Button className="!mt-6 w-full" type="submit">
-          Sign Up
-        </Button>
+        {isPending || isSuccess ? (
+          <ButtonLoading className="!mt-6 w-full">Sign up</ButtonLoading>
+        ) : (
+          <Button className="!mt-6 w-full" type="submit">
+            Sign Up
+          </Button>
+        )}
       </form>
     </Form>
   );

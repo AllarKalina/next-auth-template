@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -19,20 +18,15 @@ export default function SignInPage() {
             Welcome Back
           </CardTitle>
           <CardDescription className="text-center">
-            Please sign in to your account
+            Don't have an account?{" "}
+            <Link href="/sign-up" className="text-blue-600 hover:underline">
+              Sign up
+            </Link>
           </CardDescription>
         </CardHeader>
         <CardContent>
           <SignInForm />
         </CardContent>
-        <CardFooter>
-          <div className="mt-4 text-center text-sm text-gray-500">
-            Don't have an account?{" "}
-            <Link href="/sign-up" className="text-blue-600 hover:underline">
-              Sign up
-            </Link>
-          </div>
-        </CardFooter>
       </Card>
     </div>
   );

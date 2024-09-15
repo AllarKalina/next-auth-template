@@ -35,3 +35,14 @@ export const emailVerificationTable = pgTable("email_verification", {
     .notNull()
     .$onUpdate(() => new Date()),
 });
+
+export const sessionTable = pgTable("session", {
+  id: text("id").primaryKey().notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id),
+  expiresAt: timestamp("expires_at", {
+    withTimezone: true,
+    mode: "date",
+  }).notNull(),
+});
