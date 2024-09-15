@@ -21,6 +21,7 @@ jobs:
         run: pnpm exec playwright test
         env:
           DATABASE_URL: postgresql://postgres:KWltHqALzfvnIcvOtDEgqbgjUqvdlpRa@junction.proxy.rlwy.net:29100/railway
+          JWT_SECRET: SECRET
       - uses: actions/upload-artifact@v4
         if: always()
         with:

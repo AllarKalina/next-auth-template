@@ -48,6 +48,7 @@ test.describe("Sign up", () => {
     await nameInput.fill("a");
     await emailInput.fill("a");
     await passwordInput.fill("a");
+    await passwordInput.press("Enter");
 
     const nameError = page.getByText(
       "Name must contain atleast 2 character(s)",
