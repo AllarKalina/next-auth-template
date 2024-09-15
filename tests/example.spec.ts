@@ -71,8 +71,8 @@ test.describe("Sign up", () => {
     const emailInput = page.getByTestId("email-input");
     const passwordInput = page.getByTestId("password-input");
 
-    await nameInput.fill("Allar Kalina");
-    await emailInput.fill("allarkalina@gmail.com");
+    await nameInput.fill("Allar Klaina");
+    await emailInput.fill("allarklaina@gmail.com");
     await passwordInput.fill("Tere1234");
     await passwordInput.press("Enter");
 
@@ -82,8 +82,8 @@ test.describe("Sign up", () => {
 
     await page.goto("http://localhost:3000/sign-up");
 
-    await nameInput.fill("Allar Kalina");
-    await emailInput.fill("allarkalina@gmail.com");
+    await nameInput.fill("Allar Klaina");
+    await emailInput.fill("allarklaina@gmail.com");
     await passwordInput.fill("Tere1234");
     await passwordInput.press("Enter");
 
@@ -92,7 +92,7 @@ test.describe("Sign up", () => {
     await expect(emailError).toBeVisible();
 
     const user = await db.query.userTable.findFirst({
-      where: (table, { eq }) => eq(table.email, "allarkalina@gmail.com"),
+      where: (table, { eq }) => eq(table.email, "allarklaina@gmail.com"),
     });
 
     await db
