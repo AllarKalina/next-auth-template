@@ -65,7 +65,12 @@ export default function SignUpForm() {
             <FormItem>
               <FormLabel>Full Name</FormLabel>
               <FormControl>
-                <Input required placeholder="John Doe" {...field} />
+                <Input
+                  required
+                  placeholder="John Doe"
+                  data-testid="name-input"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,7 +83,12 @@ export default function SignUpForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input required placeholder="name@example.com" {...field} />
+                <Input
+                  required
+                  placeholder="name@example.com"
+                  data-testid="email-input"
+                  {...field}
+                />
               </FormControl>
               <div className="flex items-center gap-1">
                 <FormMessage />
@@ -105,6 +115,7 @@ export default function SignUpForm() {
                 <div className="relative">
                   <Input
                     required
+                    data-testid="password-input"
                     type={showPassword ? "text" : "password"}
                     placeholder="Create a password"
                     {...field}
@@ -224,7 +235,11 @@ export default function SignUpForm() {
         {isPending || isSuccess ? (
           <ButtonLoading className="!mt-6 w-full">Sign up</ButtonLoading>
         ) : (
-          <Button className="!mt-6 w-full" type="submit">
+          <Button
+            data-testid="sign-up-button"
+            className="!mt-6 w-full"
+            type="submit"
+          >
             Sign Up
           </Button>
         )}
