@@ -15,10 +15,19 @@ jobs:
           node-version: lts/*
       - name: Install dependencies
         run: npm install -g pnpm && pnpm install
+      - uses: actions/cache@v2
+        id: playwright-cache
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+      - run: pnpm exec playwright install-deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
       - name: Run Playwright tests
-        run: pnpm exec playwright test
+        run: pnpm exec playwright test --workers 4
         env:
           DATABASE_URL: postgresql://postgres:KWltHqALzfvnIcvOtDEgqbgjUqvdlpRa@junction.proxy.rlwy.net:29100/railway
           JWT_SECRET: SECRET
