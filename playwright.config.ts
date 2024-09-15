@@ -11,9 +11,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 
-const port = 3000;
-const baseURL = `http://localhost:${port}`;
-
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -25,9 +22,6 @@ const baseURL = `http://localhost:${port}`;
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  expect: {
-    timeout: 10 * 1000,
-  },
   testDir: "./tests",
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -42,7 +36,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: baseURL,
+    // baseURL: baseURL,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
@@ -87,9 +81,9 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: "pnpm dev",
-    reuseExistingServer: !process.env.CI,
-    url: baseURL,
-  },
+  // webServer: {
+  //   command: "pnpm dev",
+  //   reuseExistingServer: !process.env.CI,
+  //   url: baseURL,
+  // },
 });
