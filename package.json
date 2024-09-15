@@ -14,7 +14,7 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "test": "exec playwright test --ui"
+    "test": "exec playwright test --ui --workers 4"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
